@@ -56,7 +56,9 @@ public class MyFrame extends JFrame {
         button.setIcon(icon);
         button.setBackground(Color.decode("#edc9af"));
         button.setFocusable(false);
-        button.setFont(new Font("Arial" , Font.PLAIN , 30));
+        // "Ink Free"
+
+        button.setFont(new Font( "Comic Sans MS" , Font.PLAIN , 30));
     }
     public static void playSound (String path){
         try {
@@ -67,6 +69,9 @@ public class MyFrame extends JFrame {
         } catch (Exception ex) {
             System.out.println("Error loading sound: " + ex.getMessage());
         }
+    }
+    public static double maxScore(){
+        return 0 ;
     }
 
 }
