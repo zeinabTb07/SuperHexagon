@@ -1,7 +1,4 @@
-import Panels.HexagonLayer;
 import Panels.MyFrame;
-
-import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {

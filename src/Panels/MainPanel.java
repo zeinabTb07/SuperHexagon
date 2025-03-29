@@ -16,17 +16,17 @@ public class MainPanel extends JPanel implements ActionListener {
         this.setBackground(Color.PINK);
         this.setPreferredSize(new Dimension(900 , 700));
         settingButton = new JButton("Setting");
-        MyFrame.designButton(settingButton , 100 , 590 , "src/resource/icons8-settings-30.png" );
+        MyFrame.designButton(settingButton , 100 , 630 , "src/resource/icons8-settings-30.png" );
         settingButton.addActionListener(this::actionPerformed);
         this.add(settingButton);
 
         historyButton = new JButton("History");
-        MyFrame.designButton(historyButton , 600 , 590 , "src/resource/icons8-history-30.png" );
+        MyFrame.designButton(historyButton , 600 , 630 , "src/resource/icons8-history-30.png" );
         historyButton.addActionListener(this::actionPerformed);
         this.add(historyButton);
 
         startButton = new JButton("Start");
-        MyFrame.designButton(startButton , 350 , 540 , "src/resource/icons8-hexagon-50.png" );
+        MyFrame.designButton(startButton , 350 , 600 , "src/resource/icons8-hexagon-50.png" );
         startButton.addActionListener(this::actionPerformed);
         this.add(startButton);
 

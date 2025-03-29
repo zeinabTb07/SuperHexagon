@@ -14,7 +14,7 @@ public class MyFrame extends JFrame {
     static CardLayout cardLayout ;
     private static Clip soundClip ;
     public MyFrame(){
-        this.setPreferredSize(new Dimension(900 , 700));
+        this.setPreferredSize(new Dimension(900 , 730));
         this.setTitle("Super Hexagon");
         this.setIconImage(new ImageIcon
                 ("src/resource/icons8-beeswax-48.png")
@@ -38,6 +38,7 @@ public class MyFrame extends JFrame {
         panel.add(settingPanel , "setting");
         panel.add(historyPanel , "history");
         panel.add(gamePanel , "game");
+
         cardLayout.show(panel , "main");
 
         this.add(panel);

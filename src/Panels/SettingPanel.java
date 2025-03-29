@@ -18,7 +18,7 @@ public class SettingPanel extends JPanel implements ActionListener , ChangeListe
         this.setPreferredSize(new Dimension(900 , 700));
 
         backToMenu = new JButton(" Back");
-        MyFrame.designButton(backToMenu , 0 , 620 , "src/resource/icons8-left-2-35.png");
+        MyFrame.designButton(backToMenu , 0 , 650 , "src/resource/icons8-left-2-35.png");
         backToMenu.addActionListener(this);
         this.add(backToMenu);
 
