@@ -44,5 +44,14 @@ public class HistoryManager {
     public static void setSaveToHistory(boolean save){
         saveToHistory = save ;
     }
-    public static List<GameHistory> get ()
+    public static String[] getHistoryString(){
+        List<GameHistory> history = loadHistory();
+        String[] array = new String[history.size()];
+        int i = 0 ;
+        for(GameHistory g : history){
+            array[i] = g.toString();
+            i++;
+        }
+        return array;
+    }
 }

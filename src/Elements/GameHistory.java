@@ -3,7 +3,6 @@ public class GameHistory {
     private String playerName;
     private String playTime;
     private double score;
-    private static boolean saveToHistory ;
 
     public GameHistory(String playerName, String playTime, int score) {
         this.playerName = playerName;
