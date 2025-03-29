@@ -9,22 +9,26 @@ import java.awt.event.KeyListener;
 import Elements.PlayMusic;
 
 public class GamePanel extends JPanel implements KeyListener , ActionListener {
-    JCheckBox pauseButton ;
-    private static boolean play;
+    private JCheckBox pauseButton ;
+    private static PlayMusic playMusic ;
+    private static boolean play ;
     public GamePanel (){
         this.setLayout(null);
-//        this.setBackground(Color.white);
         this.setPreferredSize(new Dimension(900 , 700));
-        PlayMusic playMusic = new PlayMusic("src/resource/SuperHexagonSoundtrack-Hexagoner.wav");
-        playMusic.playMusic();
+        playMusic = new PlayMusic("src/resource/SuperHexagonSoundtrack-Hexagoner.wav");
 
         pauseButton = new JCheckBox();
         pauseButton.setIcon(new ImageIcon("src/resource/icons8-pause-100.png"));
         pauseButton.setSelectedIcon(new ImageIcon("src/resource/icons8-play-100.png"));
+        pauseButton.addActionListener(this);
         pauseButton.setBounds(0, 600, 100, 100);
         this.add(pauseButton);
 
 
+
+    }
+    public void paint (Graphics g){
+        g.drawLine(0 , 700 , 900 , 700);
 
     }
 
@@ -46,14 +50,18 @@ public class GamePanel extends JPanel implements KeyListener , ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==pauseButton){
-            play = !pauseButton.isSelected();
+            if(pauseButton.isSelected()){
+                playMusic.stopMusic();
+            } else if (play ) {
+                playMusic.playMusic();
+            }
         }
 
     }
-    public boolean isPlaying (){
-        return play;
-    }
-    private void drawLine (Graphics2D g2d){
-
+    public static void playMusic(boolean bool){
+        play = bool;
+        if(play){
+            playMusic.playMusic();
+        }
     }
 }

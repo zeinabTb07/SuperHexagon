@@ -20,9 +20,12 @@ public class GameOverPanel extends JPanel implements ActionListener {
         mainMenuButton = new JButton("Main Menu");
         MyFrame.designButton(mainMenuButton , 500 , 550 , "src/resource/icons8-menu-32.png");
         mainMenuButton.addActionListener(this);
-
-
     }
+
+    public static void playGameOverSound(){
+        MyFrame.playSound("src/resource/gameover.wav");
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {

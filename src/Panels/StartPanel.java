@@ -14,7 +14,7 @@ public class StartPanel extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(900 , 700));
 
         submitButton = new JButton("Submit");
-        MyFrame.designButton(submitButton , 350 , 320 , null);
+        MyFrame.designButton(submitButton , 350 , 350 , null);
         submitButton.addActionListener(this);
         this.add(submitButton);
 
@@ -28,6 +28,7 @@ public class StartPanel extends JPanel implements ActionListener {
         if(e.getSource()==backToMenu){
             MyFrame.switchPanel("main");
         } else if(e.getSource()==submitButton){
+            GamePanel.playMusic(true);
             MyFrame.switchPanel("game");
         }
 
