@@ -22,6 +22,9 @@ public class SettingPanel extends JPanel implements ActionListener , ChangeListe
         backToMenu.addActionListener(this);
         this.add(backToMenu);
 
+        JLabel soundLabel = new JLabel();
+
+
 
     }
 

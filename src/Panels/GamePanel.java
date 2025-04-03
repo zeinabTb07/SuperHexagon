@@ -12,10 +12,17 @@ public class GamePanel extends JPanel implements KeyListener , ActionListener {
     private JCheckBox pauseButton ;
     private static PlayMusic playMusic ;
     private static boolean play ;
+    private double rotationAngle = 0;
+    private Timer rotationTimer;
+    private Timer colorTimer;
+    private Color[] sectorColors = new Color[6];
+    private float baseHue ;
     public GamePanel (){
         this.setLayout(null);
         this.setPreferredSize(new Dimension(900 , 700));
         playMusic = new PlayMusic("src/resource/SuperHexagonSoundtrack-Hexagoner.wav");
+
+
 
         pauseButton = new JCheckBox();
         pauseButton.setIcon(new ImageIcon("src/resource/icons8-pause-100.png"));
@@ -24,9 +31,13 @@ public class GamePanel extends JPanel implements KeyListener , ActionListener {
         pauseButton.setBounds(0, 600, 100, 100);
         this.add(pauseButton);
 
+    }
 
+    class RotatingHexagon extends JPanel{
 
     }
+    
+
     public void paint (Graphics g){
         g.drawLine(0 , 700 , 900 , 700);
 
