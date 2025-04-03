@@ -8,12 +8,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainPanel extends JPanel implements ActionListener {
-    JButton settingButton ;
-    JButton historyButton;
-    JButton startButton ;
+    private JLayeredPane jLayeredPane ;
+    private JButton settingButton ;
+    private JButton historyButton;
+    private JButton startButton ;
     public MainPanel (){
-        this.setLayout(null);
-        this.setBackground(Color.PINK);
+        jLayeredPane = new JLayeredPane();
+
+        RotatingPolygonPanel panel = new RotatingPolygonPanel(6 , 20 , 2);
+
+        this.setBackground(Color.cyan);
         this.setPreferredSize(new Dimension(900 , 700));
         settingButton = new JButton("Setting");
         MyFrame.designButton(settingButton , 100 , 630 , "src/resource/icons8-settings-30.png" );

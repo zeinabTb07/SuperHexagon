@@ -6,9 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
+
 import Elements.PlayMusic;
 
-public class GamePanel extends JPanel implements KeyListener , ActionListener {
+public class GamePanel extends JPanel implements ActionListener {
     private JCheckBox pauseButton ;
     private static PlayMusic playMusic ;
     private static boolean play ;
@@ -33,29 +35,12 @@ public class GamePanel extends JPanel implements KeyListener , ActionListener {
 
     }
 
-    class RotatingHexagon extends JPanel{
 
-    }
-    
-
-    public void paint (Graphics g){
-        g.drawLine(0 , 700 , 900 , 700);
-
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
+    public static void playMusic(boolean bool){
+        play = bool;
+        if(play){
+            playMusic.playMusic();
+        }
     }
 
     @Override
@@ -66,13 +51,6 @@ public class GamePanel extends JPanel implements KeyListener , ActionListener {
             } else if (play ) {
                 playMusic.playMusic();
             }
-        }
-
-    }
-    public static void playMusic(boolean bool){
-        play = bool;
-        if(play){
-            playMusic.playMusic();
         }
     }
 }
