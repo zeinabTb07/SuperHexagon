@@ -12,17 +12,23 @@ import Elements.HistoryManager;
 import Elements.GameHistory;
 
 public class HistoryPanel extends JPanel implements ActionListener {
+    private JLayeredPane jLayeredPane;
     private JButton backToMenu ;
     private JScrollPane scrollPane  ;
     public HistoryPanel() {
-        this.setLayout(null);
-        this.setBackground(Color.blue);
+
+        this.setBackground(Color.black);
         this.setPreferredSize(new Dimension(900, 700));
 
+        jLayeredPane = new JLayeredPane();
+        jLayeredPane.setPreferredSize(new Dimension(900, 700));
+        jLayeredPane.setLayout(null);
+
+
         backToMenu = new JButton(" Back");
-        MyFrame.designButton(backToMenu, 0, 650, "src/resource/icons8-left-2-35.png");
+        MyFrame.designButton(backToMenu, 0, 640, "src/resource/icons8-left-2-35.png");
         backToMenu.addActionListener(this);
-        this.add(backToMenu);
+        jLayeredPane.add(backToMenu , JLayeredPane.PALETTE_LAYER);
 
 
         List<GameHistory> history = HistoryManager.loadHistory();
@@ -52,10 +58,10 @@ public class HistoryPanel extends JPanel implements ActionListener {
         header.setFont(new Font("Ink Free", Font.BOLD, 35));
         header.setBackground(Color.darkGray);
         header.setForeground(Color.WHITE);
-        scrollPane.setBounds(10 , 10 , 865 , 675);
+        scrollPane.setBounds(40 , 30 , 820 , 630);
 
-
-        this.add(scrollPane);
+        jLayeredPane.add(scrollPane ,JLayeredPane.DEFAULT_LAYER);
+        this.add(jLayeredPane);
     }
 
     @Override

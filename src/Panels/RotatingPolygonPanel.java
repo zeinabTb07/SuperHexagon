@@ -57,7 +57,7 @@ class RotatingPolygonPanel extends JPanel {
 
         int centerX = getWidth() / 2;
         int centerY = getHeight() / 2;
-        int R = 500;
+        int R = 700;
 
         g2d.rotate(rotationAngle, centerX, centerY);
 
@@ -73,8 +73,8 @@ class RotatingPolygonPanel extends JPanel {
         Polygon polygon = new Polygon();
         for (int i = 0; i < n; i++) {
             double angle = Math.toRadians(radius * i);
-            int x = centerX + (int) (50 * Math.cos(angle));
-            int y = centerY + (int) (50 * Math.sin(angle));
+            int x = centerX + (int) (70 * Math.cos(angle));
+            int y = centerY + (int) (70 * Math.sin(angle));
             polygon.addPoint(x, y);
         }
         g2d.setColor(Color.WHITE);
@@ -94,7 +94,7 @@ class RotatingPolygonPanel extends JPanel {
         Color even = Color.getHSBColor(baseHue + 0.01f, saturation, brightnessEven);
 
         for (int i = 0; i < n; i++) {
-            if ((i ^ 1) == 1) {
+            if ((i & 1) == 1) {
                 fieldColors[i] = even;
             } else fieldColors[i] = odd;
         }

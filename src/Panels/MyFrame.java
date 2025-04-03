@@ -1,6 +1,5 @@
 package Panels;
 
-import com.sun.glass.ui.Application;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -31,10 +30,8 @@ public class MyFrame extends JFrame {
         StartPanel startPanel = new StartPanel();
         HistoryPanel historyPanel = new HistoryPanel();
         GamePanel gamePanel = new GamePanel();
-        GameOverPanel gameOverPanel = new GameOverPanel();
         panel.add(mainPanel , "main");
         panel.add(startPanel , "start");
-        panel.add(gameOverPanel , "gameOver");
         panel.add(settingPanel , "setting");
         panel.add(historyPanel , "history");
         panel.add(gamePanel , "game");
@@ -55,10 +52,10 @@ public class MyFrame extends JFrame {
         ImageIcon icon = new ImageIcon(path);
         button.setBounds(x , y , 200 , 40);
         button.setIcon(icon);
-        button.setBackground(Color.decode("#edc9af"));
+        //Color.decode("#edc9af")
+        button.setBackground(Color.white);
         button.setFocusable(false);
         // "Ink Free"
-
         button.setFont(new Font( "Comic Sans MS" , Font.PLAIN , 30));
     }
     public static void playSound (String path){
