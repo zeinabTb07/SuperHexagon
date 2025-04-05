@@ -42,7 +42,7 @@ public class MainPanel extends JPanel implements ActionListener {
         startButton.addActionListener(this::actionPerformed);
         jLayeredPane.add(startButton , JLayeredPane.PALETTE_LAYER);
 
-        JLabel maxScoreLabel = new JLabel("Max Score : "  + MyFrame.maxScore() );
+        JLabel maxScoreLabel = new JLabel("Max Score : "  + HistoryPanel.getMaxScore() );
         maxScoreLabel.setBounds(10 , 5 , 250 , 40);
         maxScoreLabel.setForeground(Color.white);
         maxScoreLabel.setFont(new Font( "Comic Sans MS" , Font.BOLD , 25));

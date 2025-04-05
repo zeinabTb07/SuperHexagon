@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-class RotatingPolygonPanel extends JPanel {
+public class RotatingPolygonPanel extends JPanel {
     private int n = 1;
     private double rotationAngle = 0;
     private Timer rotationTimer;

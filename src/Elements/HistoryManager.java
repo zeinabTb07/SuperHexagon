@@ -1,6 +1,7 @@
 package Elements;
 
 
+import Panels.SettingPanel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -12,7 +13,7 @@ import java.util.List;
 public class HistoryManager {
     private static final String FILE_NAME = "src/Elements/gameHistory.json";
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static boolean saveToHistory = true;
+    private static boolean saveToHistory  ;
 
     public static List<GameHistory> loadHistory() {
         try (Reader reader = new FileReader(FILE_NAME)) {
@@ -24,6 +25,7 @@ public class HistoryManager {
 
 
     public static void saveHistory(List<GameHistory> history) {
+        saveToHistory = SettingPanel.canHistorySaved();
         try (Writer writer = new FileWriter(FILE_NAME)) {
             gson.toJson(history, writer);
         } catch (IOException e) {

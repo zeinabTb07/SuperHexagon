@@ -15,6 +15,8 @@ public class HistoryPanel extends JPanel implements ActionListener {
     private JLayeredPane jLayeredPane;
     private JButton backToMenu ;
     private JScrollPane scrollPane  ;
+    private static JTable table = new JTable();
+    private static double maxScore ;
     public HistoryPanel() {
 
         this.setBackground(Color.black);
@@ -35,12 +37,15 @@ public class HistoryPanel extends JPanel implements ActionListener {
         String[] columnNames = {"Player" , "Date&Time" , "Record"} ;
         String[][] data = new String[history.size()][3];
         int i = 0 ;
+        double max = 0 ;
         for(GameHistory g : history){
             data[i][0]=g.getPlayerName();
             data[i][1] = g.getPlayTime();
             data[i][2] = String.valueOf(g.getScore());
+            if(g.getScore()>max) max = g.getScore();
             i++;
         }
+        maxScore = max;
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
@@ -49,7 +54,7 @@ public class HistoryPanel extends JPanel implements ActionListener {
             }
         };
 
-        JTable table = new JTable(model);
+        table = new JTable(model);
         table.setFont(new Font( "Comic Sans MS" , Font.ITALIC , 30));
         table.setRowHeight(40);
         scrollPane = new JScrollPane(table);
@@ -62,6 +67,10 @@ public class HistoryPanel extends JPanel implements ActionListener {
 
         jLayeredPane.add(scrollPane ,JLayeredPane.DEFAULT_LAYER);
         this.add(jLayeredPane);
+    }
+
+    public static double getMaxScore() {
+        return maxScore;
     }
 
     @Override

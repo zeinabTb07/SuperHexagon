@@ -68,8 +68,5 @@ public class MyFrame extends JFrame {
             System.out.println("Error loading sound: " + ex.getMessage());
         }
     }
-    public static double maxScore(){
-        return 0 ;
-    }
 
 }
