@@ -14,13 +14,14 @@ public class GamePanel extends JPanel implements ActionListener {
     private JLayeredPane jLayeredPane ;
     protected static boolean play = true  ;
     private GamePlayField panel ;
+
     public GamePanel (){
         this.setLayout(null);
         this.setPreferredSize(new Dimension(900 , 700));
         playMusic = new PlayMusic("src/resource/SuperHexagonSoundtrack-Hexagoner.wav");
 
         jLayeredPane = new JLayeredPane();
-        panel = new GamePlayField(6 , 20);
+        panel = new GamePlayField(6 , 20 , 0);
         jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
 
 
@@ -34,17 +35,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
         jLayeredPane.setBounds(0 , 0 , 900 , 700);
         panel.addNotify();
-        setFocusable(true);
-        requestFocus();
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                double rotationSpeed = 0.7;
-                int key = e.getKeyCode();
-                if (key == KeyEvent.VK_LEFT && play)  panel.rotateMahlar(-rotationSpeed);
-                if (key == KeyEvent.VK_RIGHT && play) panel.rotateMahlar(rotationSpeed+0.2);
-            }
-        });
+        panel.prepareListeners();
         this.add(jLayeredPane);
 
     }
@@ -60,12 +51,18 @@ public class GamePanel extends JPanel implements ActionListener {
     private void stopGame(){
         playMusic.stopMusic();
         play = false;
+
     }
     private void startGame(){
         if (SettingPanel.canMusicPlayed()) {
             playMusic.playMusic();
         }
         play = true;
+        jLayeredPane.remove(panel);
+        panel = new GamePlayField(9 , 10 , panel.getBaseHue() );
+        jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
+        panel.prepareListeners();
+        panel.requestFocus();
     }
 
     @Override
@@ -85,10 +82,16 @@ public class GamePanel extends JPanel implements ActionListener {
         private float baseHue ;
         private Mahlar mahlar;
         private int hardness = 0 ;
-        GamePlayField(int n , int delay ){
+        private static int R ;
+        private boolean firstColor = false ;
+        public float getBaseHue(){
+            return baseHue;
+        }
+        GamePlayField(int n , int delay , float baseHue){
+            R = 50 ;
             this.n = n ;
             fieldColors = new Color[n];
-            baseHue = 0 ;
+            this.baseHue = baseHue ;
             updateColors();
             this.setPreferredSize(new Dimension(900 , 700));
             setFocusable(true);
@@ -99,7 +102,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 int j = 0 ;
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                   if(play){
+                   if(GamePanel.play){
                        rotationAngle+=Math.toRadians(0.5);
                        i++;
                        j++;
@@ -121,7 +124,65 @@ public class GamePanel extends JPanel implements ActionListener {
 
         this.setBounds(0 , 0 , 900 , 700);
 
+            setFocusable(true);
+            requestFocus();
+
         }
+
+        private int getR(){
+            return R ;
+        }
+        public void prepareListeners() {
+            InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+            ActionMap actionMap = this.getActionMap();
+
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "left");
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "right");
+
+            actionMap.put("left", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (GamePanel.play) rotateMahlar(-0.15);
+                }
+            });
+
+            actionMap.put("right", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (GamePanel.play) rotateMahlar(0.2);
+                }
+            });
+        }
+
+//        public void prepareListeners(){
+//            requestFocus();
+//           this.addKeyListener(new KeyListener() {
+//                @Override
+//                public void keyTyped(KeyEvent e) {
+//                    double rotationSpeed = 0.7;
+//                    int key = e.getKeyCode();
+//                    if (key == KeyEvent.VK_LEFT && play)  rotateMahlar(-rotationSpeed);
+//                    if (key == KeyEvent.VK_RIGHT && play) rotateMahlar(rotationSpeed+0.2);
+//                    System.out.println(key);
+//
+//                }
+//
+//                @Override
+//                public void keyPressed(KeyEvent e) {
+//                    double rotationSpeed = 0.7;
+//                    int key = e.getKeyCode();
+//                    if (key == KeyEvent.VK_LEFT && play)  rotateMahlar(-rotationSpeed);
+//                    if (key == KeyEvent.VK_RIGHT && play) rotateMahlar(rotationSpeed+0.2);
+//                    System.out.println(key);
+//                }
+//
+//                @Override
+//                public void keyReleased(KeyEvent e) {
+//
+//                }
+//            });
+//        }
+
         public void rotateMahlar (double rotationSpeed){
             mahlar.rotateRelative(rotationSpeed);
         }
@@ -157,11 +218,12 @@ public class GamePanel extends JPanel implements ActionListener {
                 polygon.addPoint(x, y);
             }
 
-            mahlar.draw(g2d);
 
             g2d.setColor(Color.WHITE);
             g2d.fillPolygon(polygon);
             g2d.setColor(Color.BLACK);
+
+            mahlar.draw(g2d);
 
         }
 

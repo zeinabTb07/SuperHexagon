@@ -76,10 +76,8 @@ public class StartPanel extends JPanel implements ActionListener {
             MyFrame.switchPanel("main");
         } else if(e.getSource()==submitButton){
             if(!jTextField.getText().equals("Please Enter Your Name") && !jTextField.getText().isEmpty()){
-                System.out.println(jTextField.getText());
                 GamePanel.playMusic(SettingPanel.canMusicPlayed());
-                MyFrame.switchPanel("game");
-            }
+                MyFrame.switchPanel("game");}
 
 
         }
