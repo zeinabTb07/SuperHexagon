@@ -5,16 +5,20 @@ import java.awt.*;
 public class Mahlar {
     private double angleOffset = 0;
     private int radius;
-    private int size; // Side length of the equilateral triangle
+    private int size;
     private Polygon triangle;
     private int circleCenterX ;
     private int circleCenterY ;
-    public Mahlar(int centerX, int centerY, int radius, int size) {
+    public Mahlar(int centerX, int centerY, int radius, int size ) {
         circleCenterX = centerX;
         circleCenterY = centerY;
         this.radius = radius;
         this.size = size;
         updateTriangle();
+    }
+
+    public double getCurrentAngle() {
+        return angleOffset;
     }
 
     private void updateTriangle() {

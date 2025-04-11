@@ -21,9 +21,9 @@ public class GamePanel extends JPanel implements ActionListener {
         playMusic = new PlayMusic("src/resource/SuperHexagonSoundtrack-Hexagoner.wav");
 
         jLayeredPane = new JLayeredPane();
-        panel = new GamePlayField(6 , 20 , 0);
+        jLayeredPane.setBounds(0 , 0 , 900 , 700);
+        panel = new GamePlayField(6 , 20 , 0 , 0 );
         jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
-
 
 
         pauseButton = new JCheckBox();
@@ -58,8 +58,12 @@ public class GamePanel extends JPanel implements ActionListener {
             playMusic.playMusic();
         }
         play = true;
+        panel.requestFocus();
+    }
+    private void changePanel(int n){
+        double currentMahlarAngle = panel.mahlar.getCurrentAngle();
         jLayeredPane.remove(panel);
-        panel = new GamePlayField(9 , 10 , panel.getBaseHue() );
+        panel = new GamePlayField(n , 10 , panel.getBaseHue() , currentMahlarAngle+panel.getRotationAngle());
         jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
         panel.prepareListeners();
         panel.requestFocus();
@@ -83,34 +87,53 @@ public class GamePanel extends JPanel implements ActionListener {
         private Mahlar mahlar;
         private int hardness = 0 ;
         private static int R ;
-        private boolean firstColor = false ;
+        private boolean firstColoring = true;
         public float getBaseHue(){
             return baseHue;
         }
-        GamePlayField(int n , int delay , float baseHue){
+        public double getRotationAngle(){
+            return rotationAngle;
+        }
+        GamePlayField(int n , int delay , float baseHue , double currentAngle ){
             R = 50 ;
             this.n = n ;
+
             fieldColors = new Color[n];
             this.baseHue = baseHue ;
             updateColors();
             this.setPreferredSize(new Dimension(900 , 700));
             setFocusable(true);
 
+            mahlar = new Mahlar(450 , 350 , R + 10 , 15 );
+            mahlar.rotateRelative(currentAngle);
+
 
             timer = new Timer(delay, new ActionListener() {
                 int i = 0 ;
                 int j = 0 ;
+                int counter = 0 ;
                 @Override
                 public void actionPerformed(ActionEvent e) {
                    if(GamePanel.play){
+
                        rotationAngle+=Math.toRadians(0.5);
                        i++;
                        j++;
-                       if(i==80) {
+                       if(i==60) {
                            updateColors();
                            i = 0;
+                           counter++;
                        }
-                       if(j == 60 - hardness){
+
+                       if((counter+1)%40==0){
+                           Random ran = new Random();
+                           changePanel(ran.nextInt(3, 7));
+                           counter++;
+                       }
+                       if(i % 20 == 0) {
+                           hardness++;
+                       }
+                       if(j == 80 - hardness){
                            // TODO : spawn wall
                            j = 0;
                        }
@@ -119,8 +142,6 @@ public class GamePanel extends JPanel implements ActionListener {
                 }
             });
         timer.start();
-
-        mahlar = new Mahlar(450 , 350 , 70 , 15);
 
         this.setBounds(0 , 0 , 900 , 700);
 
@@ -154,35 +175,6 @@ public class GamePanel extends JPanel implements ActionListener {
             });
         }
 
-//        public void prepareListeners(){
-//            requestFocus();
-//           this.addKeyListener(new KeyListener() {
-//                @Override
-//                public void keyTyped(KeyEvent e) {
-//                    double rotationSpeed = 0.7;
-//                    int key = e.getKeyCode();
-//                    if (key == KeyEvent.VK_LEFT && play)  rotateMahlar(-rotationSpeed);
-//                    if (key == KeyEvent.VK_RIGHT && play) rotateMahlar(rotationSpeed+0.2);
-//                    System.out.println(key);
-//
-//                }
-//
-//                @Override
-//                public void keyPressed(KeyEvent e) {
-//                    double rotationSpeed = 0.7;
-//                    int key = e.getKeyCode();
-//                    if (key == KeyEvent.VK_LEFT && play)  rotateMahlar(-rotationSpeed);
-//                    if (key == KeyEvent.VK_RIGHT && play) rotateMahlar(rotationSpeed+0.2);
-//                    System.out.println(key);
-//                }
-//
-//                @Override
-//                public void keyReleased(KeyEvent e) {
-//
-//                }
-//            });
-//        }
-
         public void rotateMahlar (double rotationSpeed){
             mahlar.rotateRelative(rotationSpeed);
         }
@@ -198,13 +190,13 @@ public class GamePanel extends JPanel implements ActionListener {
             int centerY = getHeight() / 2;
 
             g2d.rotate(rotationAngle, centerX , centerY);
-            int R = 700;
+            int circleR = 700;
 
             for (int i = 0; i < n; i++) {
                 double startAngle = Math.toRadians((360) / n * i);
                 g2d.setColor(fieldColors[i]);
-                g2d.fillArc(centerX - R - 10, centerY - R - 10,
-                        2 * (R + 10), 2 * (R + 10),
+                g2d.fillArc(centerX - circleR - 10, centerY - circleR - 10,
+                        2 * (circleR + 10), 2 * (circleR + 10),
                         (int) Math.toDegrees(startAngle), ((360) / n) + 1);
             }
 
@@ -212,9 +204,9 @@ public class GamePanel extends JPanel implements ActionListener {
             Polygon polygon = new Polygon();
             for (int i = 0; i < n; i++) {
                 double angle = Math.toRadians(radius * i);
-                int x = centerX + (int) (50 * Math.cos(angle));
+                int x = centerX + (int) (R * Math.cos(angle));
 
-                int y = centerY + (int) (50 * Math.sin(angle));
+                int y = centerY + (int) (R * Math.sin(angle));
                 polygon.addPoint(x, y);
             }
 
@@ -230,7 +222,9 @@ public class GamePanel extends JPanel implements ActionListener {
         private void updateColors() {
             Random random = new Random();
 
-            baseHue += random.nextFloat();
+            if(firstColoring) firstColoring = false ;
+            else  baseHue += random.nextFloat();
+
             float saturation = 0.7f;
             float brightnessOdd = 0.3f;
             float brightnessEven = 0.4f;
