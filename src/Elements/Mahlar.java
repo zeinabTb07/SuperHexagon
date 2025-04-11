@@ -1,5 +1,7 @@
 package Elements;
 
+import Panels.GamePanel;
+
 import java.awt.*;
 
 public class Mahlar {
@@ -51,7 +53,7 @@ public class Mahlar {
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.setColor(Color.white);
+        g2d.setColor(GamePanel.color);
         g2d.fill(triangle);
     }
 

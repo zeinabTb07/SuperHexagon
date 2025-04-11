@@ -3,11 +3,12 @@ package Panels;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Random;
-
 import Elements.PlayMusic;
 import Elements.Mahlar;
 import Elements.Wall;
+import Elements.WallManager;
 
 public class GamePanel extends JPanel implements ActionListener {
     private JCheckBox pauseButton ;
@@ -15,11 +16,17 @@ public class GamePanel extends JPanel implements ActionListener {
     private JLayeredPane jLayeredPane ;
     protected static boolean play = true  ;
     private GamePlayField panel ;
+    public static Color color ;
+    protected static WallManager wallManager ;
+    private  Random random;
+    private static int R ;
 
     public GamePanel (){
         this.setLayout(null);
         this.setPreferredSize(new Dimension(900 , 700));
         playMusic = new PlayMusic("src/resource/SuperHexagonSoundtrack-Hexagoner.wav");
+        color = Color.white;
+        random = new Random();
 
         jLayeredPane = new JLayeredPane();
         jLayeredPane.setBounds(0 , 0 , 900 , 700);
@@ -41,7 +48,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
-
+    public static double getR(){
+        return R ;
+    }
 
     public static void playMusic(boolean bool){
         if(SettingPanel.canMusicPlayed()){
@@ -54,13 +63,17 @@ public class GamePanel extends JPanel implements ActionListener {
         play = false;
 
     }
+
     private void startGame(){
         if (SettingPanel.canMusicPlayed()) {
             playMusic.playMusic();
         }
+        System.out.println("---------");
+        changePanel(6);
         play = true;
         panel.requestFocus();
     }
+
     private void changePanel(int n){
         double currentMahlarAngle = panel.mahlar.getCurrentAngle();
         jLayeredPane.remove(panel);
@@ -87,19 +100,12 @@ public class GamePanel extends JPanel implements ActionListener {
         private float baseHue ;
         private Mahlar mahlar;
         private int hardness = 0 ;
-        private static int R ;
         private boolean firstColoring = true;
 
-        Wall wall ;
-        public float getBaseHue(){
-            return baseHue;
-        }
-        public double getRotationAngle(){
-            return rotationAngle;
-        }
         GamePlayField(int n , int delay , float baseHue , double currentAngle ){
             R = 50 ;
             this.n = n ;
+            wallManager = new WallManager(n);
 
             fieldColors = new Color[n];
             this.baseHue = baseHue ;
@@ -109,9 +115,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
             mahlar = new Mahlar(450 , 350 , R + 10 , 15 );
             mahlar.rotateRelative(currentAngle);
-            wall = new Wall(n , 800 , 450 , 350 , 1 , Color.black);
 
-            timer = new Timer(delay, new ActionListener() {
+            timer = new Timer(delay, new ActionListener()  {
                 int i = 0 ;
                 int j = 0 ;
                 int k = 0 ;
@@ -121,46 +126,58 @@ public class GamePanel extends JPanel implements ActionListener {
                    if(GamePanel.play){
 
                        rotationAngle+=Math.toRadians(0.5);
-                       wall.updateWall();
 
                        k++;
                        i++;
                        j++;
+                       for(ArrayList<Wall> walls : wallManager.getWalls()){
+                           for(Wall wall : walls){
+                               wall.updateWall();
+                           }
+                       }
 
-                       if(i==50) {
+                       if(i==40) {
                            updateColors();
                            i = 0;
                            counter++;
                        }
 
-                       if((counter+1)%40==0){
-                           Random ran = new Random();
-                           changePanel(ran.nextInt(3, 7));
-                           counter++;
-                       }
                        if(i % 20 == 0) {
                            hardness++;
                        }
-                       if(j == 80 - hardness){
-                           // TODO : spawn wall
-                           j = 0;
+                       if (j==100){
+                           wallManager.spawnWalls(random.nextInt(0 , 3));
+                           j=0 ;
                        }
+                       if(k+hardness==80){
+                           wallManager.spawnWalls(random.nextInt(0 , 3));
+                           k=0;
+                           if(hardness>40) hardness = 30 ;
+                       }
+
+                       if(k==5){
+                           wallManager.checkInteredCenter();
+                           // TODO: collision detection
+//                           for (Wall wall : walls) {
+//                               if (mahlar.getShape().intersects(wall.getShape().getBounds2D())) {
+//                                   // Collision detected
+//                               }
+//                           }
+                           k=0;
+                       }
+
                        repaint();
                    }
                 }
             });
         timer.start();
-
         this.setBounds(0 , 0 , 900 , 700);
 
-            setFocusable(true);
-            requestFocus();
+        setFocusable(true);
+
 
         }
 
-        private int getR(){
-            return R ;
-        }
         public void prepareListeners() {
             InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
             ActionMap actionMap = this.getActionMap();
@@ -182,6 +199,13 @@ public class GamePanel extends JPanel implements ActionListener {
                 }
             });
         }
+        public float getBaseHue(){
+            return baseHue;
+        }
+
+        public double getRotationAngle(){
+            return rotationAngle;
+        }
 
         public void rotateMahlar (double rotationSpeed){
             mahlar.rotateRelative(rotationSpeed);
@@ -201,18 +225,18 @@ public class GamePanel extends JPanel implements ActionListener {
             int circleR = 700;
 
             for (int i = 0; i < n; i++) {
-                double startAngle = Math.toRadians((360) / n * i);
+                double startAngle = (360/n)*i;
                 g2d.setColor(fieldColors[i]);
                 g2d.fillArc(centerX - circleR - 10, centerY - circleR - 10,
                         2 * (circleR + 10), 2 * (circleR + 10),
-                        (int) Math.toDegrees(startAngle), ((360) / n) + 1);
+                        (int) startAngle , 360/n);
             }
 
 
-            int radius = ((360) / n);
+            double radius =  2*Math.PI/n;
             Polygon polygon = new Polygon();
             for (int i = 0; i < n; i++) {
-                double angle = Math.toRadians(radius * i);
+                double angle = radius*i;
                 int x = centerX + (int) (R * Math.cos(angle));
 
                 int y = centerY + (int) (R * Math.sin(angle));
@@ -225,7 +249,12 @@ public class GamePanel extends JPanel implements ActionListener {
             g2d.fillPolygon(polygon);
             g2d.setColor(Color.BLACK);
 
-            wall.draw(g2d);
+            for(ArrayList<Wall> walls : wallManager.getWalls()){
+                for(Wall wall : walls){
+                    wall.draw(g2d);
+                }
+            }
+
             mahlar.draw(g2d);
 
         }
