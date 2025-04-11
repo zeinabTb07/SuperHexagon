@@ -51,11 +51,11 @@ public class Wall {
         int y2 = (int) (circleCenterY+ r*Math.sin((i)*(angle)));
 
 
-        int x3 = (int) (circleCenterX + R*Math.cos((i+1)%n)*(angle));
-        int y3 = (int) (circleCenterY + R*Math.sin(((i+1)%n)*(angle)));
+        int x3 = (int) (circleCenterX + R*Math.cos((i+1)*(angle)));
+        int y3 = (int) (circleCenterY + R*Math.sin((i+1)*(angle)));
 
-        int x4 = (int) (circleCenterX + r*Math.cos(((i+1)%n)*(angle)));
-        int y4 = (int) (circleCenterY + r*Math.sin(((i+1)%n)*(angle)));
+        int x4 = (int) (circleCenterX + r*Math.cos((i+1)*(angle)));
+        int y4 = (int) (circleCenterY + r*Math.sin((i+1)*(angle)));
 
         trapzoid.addPoint(x2 , y2);
         trapzoid.addPoint(x1 , y1);
