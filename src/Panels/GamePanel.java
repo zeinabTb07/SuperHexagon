@@ -7,6 +7,7 @@ import java.util.Random;
 
 import Elements.PlayMusic;
 import Elements.Mahlar;
+import Elements.Wall;
 
 public class GamePanel extends JPanel implements ActionListener {
     private JCheckBox pauseButton ;
@@ -88,6 +89,8 @@ public class GamePanel extends JPanel implements ActionListener {
         private int hardness = 0 ;
         private static int R ;
         private boolean firstColoring = true;
+
+        Wall wall ;
         public float getBaseHue(){
             return baseHue;
         }
@@ -106,20 +109,25 @@ public class GamePanel extends JPanel implements ActionListener {
 
             mahlar = new Mahlar(450 , 350 , R + 10 , 15 );
             mahlar.rotateRelative(currentAngle);
-
+            wall = new Wall(n , 800 , 450 , 350 , 1 , Color.black);
 
             timer = new Timer(delay, new ActionListener() {
                 int i = 0 ;
                 int j = 0 ;
+                int k = 0 ;
                 int counter = 0 ;
                 @Override
                 public void actionPerformed(ActionEvent e) {
                    if(GamePanel.play){
 
                        rotationAngle+=Math.toRadians(0.5);
+                       wall.updateWall();
+
+                       k++;
                        i++;
                        j++;
-                       if(i==60) {
+
+                       if(i==50) {
                            updateColors();
                            i = 0;
                            counter++;
@@ -200,6 +208,7 @@ public class GamePanel extends JPanel implements ActionListener {
                         (int) Math.toDegrees(startAngle), ((360) / n) + 1);
             }
 
+
             int radius = ((360) / n);
             Polygon polygon = new Polygon();
             for (int i = 0; i < n; i++) {
@@ -211,10 +220,12 @@ public class GamePanel extends JPanel implements ActionListener {
             }
 
 
+
             g2d.setColor(Color.WHITE);
             g2d.fillPolygon(polygon);
             g2d.setColor(Color.BLACK);
 
+            wall.draw(g2d);
             mahlar.draw(g2d);
 
         }
