@@ -21,7 +21,8 @@ public class GameOverDialog extends JDialog {
                 this.dispose();
                 MyFrame.currentPlayer.setScore(Double.valueOf(String.format("%.2f", GamePanel.getScore())));
                 HistoryManager.addHistory(MyFrame.currentPlayer);
-                G
+
+
             }
         });
 
