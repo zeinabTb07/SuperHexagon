@@ -14,6 +14,12 @@ public class GameHistory {
     public String getPlayTime() { return playTime; }
     public double getScore() { return score; }
 
+    public void setScore(double score){
+        this.score = score;
+    }
+
+
+
     @Override
     public String toString() {
         return playerName + " | Time: " + playTime + " | Score: " + score;

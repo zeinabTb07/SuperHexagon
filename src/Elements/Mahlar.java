@@ -52,6 +52,10 @@ public class Mahlar {
 
     }
 
+    public Polygon getTriangle(){
+        return triangle;
+    }
+
     public void draw(Graphics2D g2d) {
         g2d.setColor(GamePanel.color);
         g2d.fill(triangle);

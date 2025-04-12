@@ -1,6 +1,8 @@
 package Panels;
 
 
+import Elements.GameHistory;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -8,10 +10,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-public class MyFrame extends JFrame {
+public  class MyFrame extends JFrame {
     static JPanel panel ;
     static CardLayout cardLayout ;
     private static Clip soundClip ;
+    private  SettingPanel settingPanel;
+    private MainPanel mainPanel ;
+    private StartPanel startPanel ;
+    private HistoryPanel historyPanel ;
+    private static GamePanel gamePanel ;
+    public static GameHistory currentPlayer ;
     public MyFrame(){
         this.setPreferredSize(new Dimension(900 , 730));
         this.setTitle("Super Hexagon");
@@ -25,11 +33,11 @@ public class MyFrame extends JFrame {
         cardLayout = new CardLayout();
         panel = new JPanel(cardLayout);
 
-        SettingPanel settingPanel = new SettingPanel();
-        MainPanel mainPanel = new MainPanel();
-        StartPanel startPanel = new StartPanel();
-        HistoryPanel historyPanel = new HistoryPanel();
-        GamePanel gamePanel = new GamePanel();
+        historyPanel = new HistoryPanel();
+        settingPanel = new SettingPanel();
+        mainPanel = new MainPanel();
+        startPanel = new StartPanel();
+        gamePanel = new GamePanel();
         panel.add(mainPanel , "main");
         panel.add(startPanel , "start");
         panel.add(settingPanel , "setting");
@@ -45,6 +53,10 @@ public class MyFrame extends JFrame {
     }
 
     public static void  switchPanel (String panelName) {
+        if(panelName=="game"){
+            gamePanel.changePanel(6);
+            gamePanel.startGame();
+        }
         cardLayout.show(panel, panelName);
     }
 
@@ -52,7 +64,6 @@ public class MyFrame extends JFrame {
         ImageIcon icon = new ImageIcon(path);
         button.setBounds(x , y , 200 , 40);
         button.setIcon(icon);
-        //Color.decode("#edc9af")
         button.setBackground(Color.white);
         button.setFocusable(false);
         // "Ink Free"

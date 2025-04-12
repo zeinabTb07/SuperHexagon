@@ -2,7 +2,7 @@ package Elements;
 
 import Panels.GamePanel;
 
-import java.io.FilterOutputStream;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,13 +11,14 @@ public class WallManager {
     private boolean[] toBeOrNotTobe ;
     private  ArrayList<ArrayList<Wall>> wallsList ;
     private Random random ;
+    private int i ;
 
     public WallManager(int n){
         this.n = n ;
+        i = 0 ;
         toBeOrNotTobe = new boolean[n];
         wallsList = new ArrayList<>();
         random = new Random();
-        spawnWalls(1);
     }
 
     public void setN(int n ){
@@ -25,22 +26,39 @@ public class WallManager {
         toBeOrNotTobe = new boolean[n];
     }
 
+    public void increaseSpeed(){
+        Wall.setSpeed(Wall.getSpeed()+0.05);
+    }
+
+    public void setSpeed(){
+        Wall.setSpeed(3.5);
+    }
+    public void setWallsList(){
+        wallsList = new ArrayList<ArrayList<Wall>>();
+    }
+
 
 
     public void spawnWalls(int number ){
+        if(i==5){
+            GamePanel.color = Color.getHSBColor(random.nextFloat() , 200f , 95);
+            i=0;
+        }
+        i++;
         ArrayList<Wall> walls = new ArrayList<>();
         toBeOrNotTobe = new boolean[n];
-        if(number%3==0){
+
+
+        if(number%3==0 && (n & 1) == 0){
             int i = random.nextInt(0 , 3);
             toBeOrNotTobe[i%n] = true;
             toBeOrNotTobe[(i+2)%n] = true ;
             toBeOrNotTobe[(i+4)%n] = true;
-            System.out.println(toBeOrNotTobe.toString());
         } else if (number%3==1) {
             for(int i = 0 ; i < n ; i++){
                 toBeOrNotTobe[i] = true;
             }
-            toBeOrNotTobe[number%n] = false;
+            toBeOrNotTobe[number%(n-2)] = false;
         } else generateRandom();
 
         for(int i = 0 ; i < n ; i++){
@@ -71,7 +89,7 @@ public class WallManager {
             toBeOrNotTobe[i] = random.nextBoolean();
             if(toBeOrNotTobe[i]) counter++;
         }
-        if (counter==n) toBeOrNotTobe[random.nextInt(0 , 6)] = false;
+        if (counter==n) toBeOrNotTobe[random.nextInt(0 , 3)] = false;
 
     }
 

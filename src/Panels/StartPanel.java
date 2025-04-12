@@ -1,5 +1,7 @@
 package Panels;
 
+import Elements.GameHistory;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
@@ -7,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class StartPanel extends JPanel implements ActionListener {
     private JLayeredPane jLayeredPane;
@@ -75,10 +79,13 @@ public class StartPanel extends JPanel implements ActionListener {
         if(e.getSource()==backToMenu){
             MyFrame.switchPanel("main");
         } else if(e.getSource()==submitButton){
-            if(!jTextField.getText().equals("Please Enter Your Name") && !jTextField.getText().isEmpty()){
+            if(!jTextField.getText().equals("Please Enter Your Name") && !jTextField.getText().isEmpty()) {
                 GamePanel.playMusic(SettingPanel.canMusicPlayed());
-                MyFrame.switchPanel("game");}
-
+                MyFrame.switchPanel("game");
+                MyFrame.currentPlayer = new GameHistory(jTextField.getText() ,
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/mm/dd HH:mm"))
+                        , 0);
+            }
 
         }
 

@@ -15,7 +15,7 @@ public class Wall {
     private int circleCenterY ;
     private int i ;
     private double angle ;
-    private double speed = 2 ;
+    private static double speed = 3.5 ;
     private static Color color ;
     public Wall (int n , double R , int circleCenterX , int circleCenterY , int  i , Color color){
         this.n = n ;
@@ -30,11 +30,14 @@ public class Wall {
         updateWall();
 
     }
-    public double getSpeed(){
+    public Polygon getTrapzoid(){
+        return trapzoid;
+    }
+    public static double getSpeed(){
         return speed;
     }
-    public void setSpeed(double speed){
-        this.speed = speed;
+    public static void setSpeed(double speeed){
+        speed = speeed;
     }
 
     public double getR(){
@@ -63,7 +66,7 @@ public class Wall {
         trapzoid.addPoint(x4 , y4);
 
 
-        R = R-speed-0.1;
+        R = R-speed-0.08;
         r = r-speed;
 
     }
