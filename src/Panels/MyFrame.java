@@ -75,7 +75,9 @@ public  class MyFrame extends JFrame {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(path)) ;
             soundClip = AudioSystem.getClip();
             soundClip.open (audioInputStream);
-            soundClip.start();
+            if(SettingPanel.canMusicPlayed()){
+                soundClip.start();
+            }
         } catch (Exception ex) {
             System.out.println("Error loading sound: " + ex.getMessage());
         }

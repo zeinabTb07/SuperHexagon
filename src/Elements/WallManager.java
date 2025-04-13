@@ -11,11 +11,9 @@ public class WallManager {
     private boolean[] toBeOrNotTobe ;
     private  ArrayList<ArrayList<Wall>> wallsList ;
     private Random random ;
-    private int i ;
 
     public WallManager(int n){
         this.n = n ;
-        i = 0 ;
         toBeOrNotTobe = new boolean[n];
         wallsList = new ArrayList<>();
         random = new Random();
@@ -27,7 +25,7 @@ public class WallManager {
     }
 
     public void increaseSpeed(){
-        Wall.setSpeed(Wall.getSpeed()+0.05);
+        Wall.setSpeed(Wall.getSpeed()+0.1);
     }
 
     public void setSpeed(){

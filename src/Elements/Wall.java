@@ -35,7 +35,21 @@ public class Wall {
 
     }
     public Polygon getTrapzoid(){
-        return trapzoid;
+//        int x1 = (int) (circleCenterX + R*Math.cos(i*angle));
+//        int y1 = (int) (circleCenterY + R*Math.sin(i*angle));
+//
+//        int x2 = (int) (circleCenterX + (r+7)*Math.cos((i)*(angle)));
+//        int y2 = (int) (circleCenterY+ (r+7)*Math.sin((i)*(angle)));
+//
+//
+//        int x3 = (int) (circleCenterX + R*Math.cos((i+1)*(angle)));
+//        int y3 = (int) (circleCenterY + R*Math.sin((i+1)*(angle)));
+//
+//        int x4 = (int) (circleCenterX + (r+7)*Math.cos((i+1)*(angle)));
+//        int y4 = (int) (circleCenterY + (r+7)*Math.sin((i+1)*(angle)));
+   //     return new Polygon(new int[]{x2,x1,x3,x4} , new int[]{y2,y1,y3,y4} , 4);
+
+    return trapzoid;
     }
     public static double getSpeed(){
         return speed;

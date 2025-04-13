@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import Elements.PlayMusic;
 import Elements.Mahlar;
@@ -21,7 +22,6 @@ public class GamePanel extends JPanel implements ActionListener {
     private  Random random;
     private static float baseHue ;
     private static int R ;
-    protected static JOptionPane gameLost ;
     private static double score ;
     private static JLabel maxScoreLabel ;
     private static JLabel scoreLabel ;
@@ -67,7 +67,7 @@ public class GamePanel extends JPanel implements ActionListener {
         pauseButton.setBounds(0, 600, 100, 100);
         jLayeredPane.add(pauseButton , JLayeredPane.PALETTE_LAYER);
 
-        panel = new GamePlayField(6 , 20 , panel.getBaseHue() , 0);
+        panel = new GamePlayField(6 , 25 , panel.getBaseHue() , 0);
         jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
 
         jLayeredPane.setBounds(0 , 0 , 900 , 700);
@@ -113,19 +113,22 @@ public class GamePanel extends JPanel implements ActionListener {
         panel.requestFocus();
     }
 
-//    public void changePanel(int n){
-//        double currentMahlarAngle ;
-//        if(panel.mahlar!=null){
-//            currentMahlarAngle = panel.mahlar.getCurrentAngle();
-//        } else currentMahlarAngle = 0 ;
-//        wallManager.setSpeed();
-//        wallManager.setWallsList();
-//        jLayeredPane.remove(panel);
-//        panel = new GamePlayField(n , 20 , panel.getBaseHue() , currentMahlarAngle+panel.getRotationAngle());
-//        jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
-//        panel.prepareListeners();
-//        panel.requestFocus();
-//    }
+    public  void changePanel(int n){
+        panel.timer.stop();
+        double currentMahlarAngle ;
+        if(panel.mahlar!=null){
+            currentMahlarAngle = panel.mahlar.getCurrentAngle();
+        } else currentMahlarAngle = 0 ;
+        wallManager.setWallsList();
+        wallManager.setN(n);
+        jLayeredPane.remove(panel);
+        System.gc();
+        panel = new GamePlayField(n , 25 , panel.getBaseHue() , currentMahlarAngle+panel.getRotationAngle());
+        jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
+        panel.prepareListeners();
+        panel.requestFocus();
+        panel.timer.start();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -156,7 +159,7 @@ public class GamePanel extends JPanel implements ActionListener {
             this.setPreferredSize(new Dimension(900 , 700));
             setFocusable(true);
 
-            mahlar = new Mahlar(450 , 350 , R + 10 , 10);
+            mahlar = new Mahlar(450 , 350 , R + 5 , 10);
             mahlar.rotateRelative(currentAngle);
 
             timer = new Timer(delay, new ActionListener()  {
@@ -174,18 +177,18 @@ public class GamePanel extends JPanel implements ActionListener {
                        }
                        rotationAngle+=Math.toRadians(1);
 
-                       k++;
-                       i++;
-                       j++;
-
-                       score+=0.02;
-                       scoreLabel.setText(" Score : "  + String.format("%.2f", score));
-
-                       System.out.println("You are in timer");
+                       increaseCounters();
 
                        for(ArrayList<Wall> walls : wallManager.getWalls()){
                            for(Wall wall : walls){
                                wall.updateWall();
+                           }
+                       }
+                       if (!wallManager.getWalls().isEmpty()) {
+                           for (Wall wall : wallManager.getWalls().get(0)) {
+                               if (checkCollision(mahlar.getTriangle(), wall.getTrapzoid())) {
+                                   gameOver();
+                               }
                            }
                        }
 
@@ -193,7 +196,6 @@ public class GamePanel extends JPanel implements ActionListener {
                            updateColors();
                            GamePanel.color = Color.getHSBColor(GamePanel.getBasehue() , 0.6f , 0.9f);
                            i = 0;
-                           counter++;
                        }
 
                        if(i % 20 == 0) {
@@ -206,22 +208,27 @@ public class GamePanel extends JPanel implements ActionListener {
                            base--;
                        }
 
-                       if(base < 20) base = 30 ;
-
-//                       if(counter == 200){
-//                           changePanel(random.nextInt(4 , 7));
-//                       }
-
+                       if(base < 10) base = 20 ;
 
                        if(k==5) {
                            wallManager.checkInteredCenter();
-                           if(!wallManager.getWalls().isEmpty()) {
-                               for (Wall wall : wallManager.getWalls().get(0)) {
-                                   if (mahlar.getTriangle().intersects(wall.getTrapzoid().getBounds2D())) {
-                                       gameOver();
-                                   }
-                               }
-                           }
+//                           if(!wallManager.getWalls().isEmpty()) {
+//                               for (Wall wall : wallManager.getWalls().get(0)) {
+//                                   if (mahlar.getTriangle().intersects(wall.getTrapzoid().getBounds2D())) {
+//                                       resetCounters();
+//                                       gameOver();
+//                                       break;
+////
+////                                       System.out.println("X : " + Arrays.toString(mahlar.getTriangle().xpoints));
+////                                       System.out.println("Y : " + Arrays.toString(mahlar.getTriangle().ypoints));
+////
+////                                       System.out.println("X : " + Arrays.toString(wall.getTrapzoid().xpoints));
+////                                       System.out.println("Y : " + Arrays.toString(wall.getTrapzoid().ypoints));
+////                                       System.out.println("Game Over" );
+//                                   }
+//                               }
+                       //}
+
                            wallManager.checkInteredCenter();
                            if (score > HistoryPanel.getMaxScore()) {
                                recordBreaked();
@@ -229,9 +236,44 @@ public class GamePanel extends JPanel implements ActionListener {
 
                            k=0;
                        }
+                       if(counter==400){
+                           changePanel(random.nextInt(4 , 7));
+                           resetCounters();
+                       }
                        repaint();
                    }
 
+                }
+                private boolean isPointInPolygon(int x, int y, Polygon polygon) {
+                    return polygon.contains(x, y);
+                }
+                private boolean checkCollision(Polygon triangle, Polygon trapezoid) {
+                    for (int i = 0; i < triangle.npoints; i++) {
+                        if (isPointInPolygon(triangle.xpoints[i], triangle.ypoints[i], trapezoid)) {
+                            return true;
+                        }
+                    }
+                    for (int i = 0; i < trapezoid.npoints; i++) {
+                        if (isPointInPolygon(trapezoid.xpoints[i], trapezoid.ypoints[i], triangle)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                private void resetCounters(){
+                    i = 0 ;
+                    k = 0 ;
+                    j = 0 ;
+                    counter = 0 ;
+                }
+                private void increaseCounters(){
+                    k++;
+                    i++;
+                    j++;
+                    counter++;
+                    score+=0.02;
+                    scoreLabel.setText(" Score : "  + String.format("%.2f", score));
                 }
             });
 
@@ -281,6 +323,7 @@ public class GamePanel extends JPanel implements ActionListener {
         public void gameOver(){
             stopGame();
             MyFrame.playSound("src/resource/gameover.wav");
+            changePanel(6);
             new GameOverDialog(panel);
         }
 

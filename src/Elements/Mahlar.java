@@ -23,6 +23,7 @@ public class Mahlar {
         return angleOffset;
     }
 
+
     private void updateTriangle() {
 
         int  centerX = circleCenterX + (int)(radius * Math.cos(angleOffset));
@@ -53,6 +54,28 @@ public class Mahlar {
     }
 
     public Polygon getTriangle(){
+
+//        int  centerX = circleCenterX + (int)(radius * Math.cos(angleOffset));
+//        int centerY = circleCenterY + (int)(radius * Math.sin(angleOffset));
+//        int tipX = centerX + (int)(( size + 3) * Math.cos(angleOffset));
+//        int tipY = centerY + (int)(( size + 3) * Math.sin(angleOffset));
+//
+//
+//        double baseAngle1 = angleOffset + Math.toRadians(120);
+//        double baseAngle2 = angleOffset + Math.toRadians(240);
+//
+//        int baseX1 = centerX + (int)((size+3) * Math.cos(baseAngle1));
+//        int baseY1 = centerY + (int)((size+3)* Math.sin(baseAngle1));
+//
+//        int baseX2 = centerX + (int)((size+3) * Math.cos(baseAngle2));
+//        int baseY2 = centerY + (int)((size+3) * Math.sin(baseAngle2));
+//        Polygon sample = new Polygon();
+//        sample = new Polygon();
+//        sample.addPoint(tipX, tipY);
+//        sample.addPoint(baseX1, baseY1);
+//        sample.addPoint(baseX2, baseY2);
+//        return new Polygon(new int[]{tipX , baseX1 , baseX2} , new int[]{tipY , baseY1 , baseY2} , 3);
+
         return triangle;
     }
 
