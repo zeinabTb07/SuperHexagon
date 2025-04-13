@@ -85,6 +85,7 @@ public class StartPanel extends JPanel implements ActionListener {
                 MyFrame.currentPlayer = new GameHistory(jTextField.getText() ,
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/mm/dd HH:mm"))
                         , 0);
+                GamePanel.resetGame();
             }
 
         }

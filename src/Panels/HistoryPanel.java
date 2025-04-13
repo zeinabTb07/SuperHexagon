@@ -32,6 +32,27 @@ public class HistoryPanel extends JPanel implements ActionListener {
         backToMenu.addActionListener(this);
         jLayeredPane.add(backToMenu , JLayeredPane.PALETTE_LAYER);
 
+        update();
+        scrollPane = new JScrollPane(table);
+
+        scrollPane.setBounds(40 , 30 , 820 , 630);
+
+        jLayeredPane.add(scrollPane ,JLayeredPane.DEFAULT_LAYER);
+        this.add(jLayeredPane);
+    }
+
+    public static double getMaxScore() {
+        return maxScore;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource()==backToMenu){
+            MyFrame.switchPanel("main");
+        }
+
+    }
+    public static void update(){
 
         List<GameHistory> history = HistoryManager.loadHistory();
         String[] columnNames = {"Player" , "Date&Time" , "Record"} ;
@@ -57,27 +78,10 @@ public class HistoryPanel extends JPanel implements ActionListener {
         table = new JTable(model);
         table.setFont(new Font( "Comic Sans MS" , Font.ITALIC , 30));
         table.setRowHeight(40);
-        scrollPane = new JScrollPane(table);
         JTableHeader header = table.getTableHeader();
 
         header.setFont(new Font("Ink Free", Font.BOLD, 35));
         header.setBackground(Color.darkGray);
         header.setForeground(Color.WHITE);
-        scrollPane.setBounds(40 , 30 , 820 , 630);
-
-        jLayeredPane.add(scrollPane ,JLayeredPane.DEFAULT_LAYER);
-        this.add(jLayeredPane);
-    }
-
-    public static double getMaxScore() {
-        return maxScore;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==backToMenu){
-            MyFrame.switchPanel("main");
-        }
-
     }
 }

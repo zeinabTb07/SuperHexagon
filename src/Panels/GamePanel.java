@@ -3,8 +3,6 @@ package Panels;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Random;
 import Elements.PlayMusic;
@@ -15,20 +13,28 @@ import Elements.WallManager;
 public class GamePanel extends JPanel implements ActionListener {
     private JCheckBox pauseButton ;
     private static PlayMusic playMusic ;
-    private JLayeredPane jLayeredPane ;
+    private static JLayeredPane jLayeredPane ;
     protected static boolean play = true  ;
-    private GamePlayField panel ;
+    private static GamePlayField panel ;
     public static Color color ;
     protected static WallManager wallManager ;
     private  Random random;
+    private static float baseHue ;
     private static int R ;
     protected static JOptionPane gameLost ;
     private static double score ;
     private static JLabel maxScoreLabel ;
     private static JLabel scoreLabel ;
 
-    public static double getScore(){
-        return score;
+    public static void resetGame(){
+        score = 0 ;
+        wallManager.setWallsList();
+        wallManager.setSpeed();
+        panel.timer.stop();
+        GamePlayField.base = 50 ;
+        startGame();
+        maxScoreLabel.setText("Max Score : "  + HistoryPanel.getMaxScore() );
+        panel.requestFocus();
     }
 
     public GamePanel (){
@@ -38,11 +44,9 @@ public class GamePanel extends JPanel implements ActionListener {
         playMusic = new PlayMusic("src/resource/SuperHexagonSoundtrack-Hexagoner.wav");
         color = Color.decode("#edc9af");
         random = new Random();
+        wallManager = new WallManager(6);
 
         jLayeredPane = new JLayeredPane();
-        jLayeredPane.setBounds(0 , 0 , 900 , 700);
-        panel = new GamePlayField();
-        jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
 
         maxScoreLabel = new JLabel("Max Score : "  + HistoryPanel.getMaxScore() );
         maxScoreLabel.setBounds(10 , 5 , 250 , 40);
@@ -56,9 +60,6 @@ public class GamePanel extends JPanel implements ActionListener {
         scoreLabel.setFont(new Font( "Comic Sans MS" , Font.BOLD , 25));
         jLayeredPane.add(scoreLabel, JLayeredPane.PALETTE_LAYER);
 
-
-
-
         pauseButton = new JCheckBox();
         pauseButton.setIcon(new ImageIcon("src/resource/icons8-pause-100.png"));
         pauseButton.setSelectedIcon(new ImageIcon("src/resource/icons8-play-100.png"));
@@ -66,11 +67,24 @@ public class GamePanel extends JPanel implements ActionListener {
         pauseButton.setBounds(0, 600, 100, 100);
         jLayeredPane.add(pauseButton , JLayeredPane.PALETTE_LAYER);
 
+        panel = new GamePlayField(6 , 20 , panel.getBaseHue() , 0);
+        jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
+
         jLayeredPane.setBounds(0 , 0 , 900 , 700);
-        panel.addNotify();
+
         panel.prepareListeners();
+
         this.add(jLayeredPane);
 
+
+
+    }
+
+    public static double getScore(){
+        return score;
+    }
+    public static float getBasehue(){
+        return baseHue;
     }
 
     public static double getR(){
@@ -87,28 +101,31 @@ public class GamePanel extends JPanel implements ActionListener {
     private static void stopGame(){
         playMusic.stopMusic();
         play = false;
-
+        panel.timer.stop();
     }
 
-    public void startGame(){
+    public static void startGame(){
         if (SettingPanel.canMusicPlayed()) {
             playMusic.playMusic();
         }
         play = true;
+        panel.timer.start();
         panel.requestFocus();
     }
 
-    public void changePanel(int n){
-        double currentMahlarAngle ;
-        if(panel.mahlar!=null){
-            currentMahlarAngle = panel.mahlar.getCurrentAngle();
-        } else currentMahlarAngle = 0 ;
-        jLayeredPane.remove(panel);
-        panel = new GamePlayField(n , 20 , panel.getBaseHue() , currentMahlarAngle+panel.getRotationAngle());
-        jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
-        panel.prepareListeners();
-        panel.requestFocus();
-    }
+//    public void changePanel(int n){
+//        double currentMahlarAngle ;
+//        if(panel.mahlar!=null){
+//            currentMahlarAngle = panel.mahlar.getCurrentAngle();
+//        } else currentMahlarAngle = 0 ;
+//        wallManager.setSpeed();
+//        wallManager.setWallsList();
+//        jLayeredPane.remove(panel);
+//        panel = new GamePlayField(n , 20 , panel.getBaseHue() , currentMahlarAngle+panel.getRotationAngle());
+//        jLayeredPane.add(panel , JLayeredPane.DEFAULT_LAYER);
+//        panel.prepareListeners();
+//        panel.requestFocus();
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -124,16 +141,16 @@ public class GamePanel extends JPanel implements ActionListener {
         private double rotationAngle = 0;
         private Timer timer;
         private Color[] fieldColors;
-        private static float baseHue ;
         private Mahlar mahlar;
         private boolean firstColoring = true;
+        static int base ;
 
-        GamePlayField(int n , int delay , float baseHue , double currentAngle){
+        GamePlayField(int n , int delay , float hue , double currentAngle){
             R = 50 ;
             this.n = n ;
-            wallManager = new WallManager(n);
+            base = 50 ;
             fieldColors = new Color[n];
-            this.baseHue = baseHue ;
+            baseHue = hue ;
             updateColors();
 
             this.setPreferredSize(new Dimension(900 , 700));
@@ -146,14 +163,13 @@ public class GamePanel extends JPanel implements ActionListener {
                 int i = 0 ;
                 int j = 0 ;
                 int k = 0 ;
-                int base = 50 ;
                 int counter = 0 ;
                 boolean first = true;
                 @Override
                 public void actionPerformed(ActionEvent e) {
                    if(GamePanel.play){
                        if(first){
-                           wallManager.spawnWalls(random.nextInt(0 , 3));
+                           wallManager.spawnWalls(random.nextInt(0 , 4));
                            first = false;
                        }
                        rotationAngle+=Math.toRadians(1);
@@ -161,8 +177,12 @@ public class GamePanel extends JPanel implements ActionListener {
                        k++;
                        i++;
                        j++;
+
                        score+=0.02;
                        scoreLabel.setText(" Score : "  + String.format("%.2f", score));
+
+                       System.out.println("You are in timer");
+
                        for(ArrayList<Wall> walls : wallManager.getWalls()){
                            for(Wall wall : walls){
                                wall.updateWall();
@@ -171,6 +191,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
                        if(i==30) {
                            updateColors();
+                           GamePanel.color = Color.getHSBColor(GamePanel.getBasehue() , 0.6f , 0.9f);
                            i = 0;
                            counter++;
                        }
@@ -184,34 +205,44 @@ public class GamePanel extends JPanel implements ActionListener {
                            wallManager.spawnWalls(random.nextInt(0 , 3));
                            base--;
                        }
+
                        if(base < 20) base = 30 ;
 
+//                       if(counter == 200){
+//                           changePanel(random.nextInt(4 , 7));
+//                       }
 
-                       if(k==5){
+
+                       if(k==5) {
                            wallManager.checkInteredCenter();
-
                            if(!wallManager.getWalls().isEmpty()) {
                                for (Wall wall : wallManager.getWalls().get(0)) {
                                    if (mahlar.getTriangle().intersects(wall.getTrapzoid().getBounds2D())) {
                                        gameOver();
                                    }
                                }
-                               k=0;
                            }
-                       }
+                           wallManager.checkInteredCenter();
+                           if (score > HistoryPanel.getMaxScore()) {
+                               recordBreaked();
+                           }
 
+                           k=0;
+                       }
                        repaint();
                    }
 
                 }
             });
-        timer.start()
 
-        ;
         this.setBounds(0 , 0 , 900 , 700);
 
         setFocusable(true);
 
+        }
+
+        public void recordBreaked(){
+            GamePanel.maxScoreLabel.setText("Record Breaked!");
         }
         public GamePlayField(){}
 
@@ -251,8 +282,6 @@ public class GamePanel extends JPanel implements ActionListener {
             stopGame();
             MyFrame.playSound("src/resource/gameover.wav");
             new GameOverDialog(panel);
-            wallManager.setSpeed();
-            wallManager.setWallsList();
         }
 
         protected void paintComponent(Graphics g){

@@ -30,6 +30,10 @@ public class Wall {
         updateWall();
 
     }
+    public void reset(){
+        setSpeed(3);
+
+    }
     public Polygon getTrapzoid(){
         return trapzoid;
     }

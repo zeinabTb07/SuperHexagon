@@ -38,13 +38,10 @@ public class HistoryManager {
         if(loadHistory()!=null){
              history = loadHistory();
         } else history = new ArrayList<>();
-        if(saveToHistory){
+        if(SettingPanel.canHistorySaved()){
             history.add(newRecord);
         }
         saveHistory(history);
-    }
-    public static void setSaveToHistory(boolean save){
-        saveToHistory = save ;
     }
     public static String[] getHistoryString(){
         List<GameHistory> history = loadHistory();

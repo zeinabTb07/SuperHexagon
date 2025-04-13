@@ -40,11 +40,6 @@ public class WallManager {
 
 
     public void spawnWalls(int number ){
-        if(i==5){
-            GamePanel.color = Color.getHSBColor(random.nextFloat() , 200f , 95);
-            i=0;
-        }
-        i++;
         ArrayList<Wall> walls = new ArrayList<>();
         toBeOrNotTobe = new boolean[n];
 

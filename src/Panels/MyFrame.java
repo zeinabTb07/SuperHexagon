@@ -20,6 +20,7 @@ public  class MyFrame extends JFrame {
     private HistoryPanel historyPanel ;
     private static GamePanel gamePanel ;
     public static GameHistory currentPlayer ;
+
     public MyFrame(){
         this.setPreferredSize(new Dimension(900 , 730));
         this.setTitle("Super Hexagon");
@@ -53,10 +54,10 @@ public  class MyFrame extends JFrame {
     }
 
     public static void  switchPanel (String panelName) {
-        if(panelName=="game"){
-            gamePanel.changePanel(6);
-            gamePanel.startGame();
-        }
+//        if(panelName=="game"){
+//            gamePanel.changePanel(6);
+//            gamePanel.startGame();
+//        }
         cardLayout.show(panel, panelName);
     }
 
